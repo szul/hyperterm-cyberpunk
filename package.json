@@ -1,0 +1,18 @@
+{
+  "name": "hyper-cyberpunk",
+  "version": "0.1.0",
+  "keywords": [
+    "hyper",
+    "hyperterm",
+    "cyberpunk",
+    "theme",
+    "themes",
+    "terminal",
+    "hyper-theme"
+  ],
+  "description": "Hyper terminal cyberpunk theme inspired by the Cyberpunk Visual Studio Code theme.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szul/hyper-cyberpunk.git"
+  }
+}
