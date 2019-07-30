@@ -11,7 +11,7 @@ exports.decorateConfig = (config) => {
 		foregroundColor: BRIGHT_PURPLE,
 		backgroundColor: DARK_PURPLE,
 		borderColor: PINKISH,
-		cursorColor: '#40FFFF',
+		cursorColor: TEXT_GREEN,
 	});
 }
 
@@ -31,9 +31,9 @@ exports.decorateHyper = (HyperTerm, { React, notify }) => {
 		}
 		render() {
 			const noiseCss = `
-        background-color: #372963;
-        background-size: 100px 100px;
-      `;
+				background-color: #372963;
+				background-size: 100px 100px;
+			`;
 
 			const textShadow = generateTextShadow();
 
@@ -48,7 +48,7 @@ exports.decorateHyper = (HyperTerm, { React, notify }) => {
             ${noiseCss}
           }
           .tabs_nav .tabs_title {
-            color: rgb(${TEXT_GREEN}) !important;
+            color: ${TEXT_GREEN} !important;
             font-weight: bold !important;
             ${textShadow}
           }
@@ -62,7 +62,7 @@ exports.decorateHyper = (HyperTerm, { React, notify }) => {
             border-left: 1px solid ${BRIGHT_PURPLE} !important;
           }
           .tab_tab:not(.tab_active) {
-            color: rgba(${TEXT_GREEN}, 0.7);
+            color: ${TEXT_GREEN};
           }
           .tab_tab.tab_active {
             height: calc(100% + 1px);
@@ -70,7 +70,7 @@ exports.decorateHyper = (HyperTerm, { React, notify }) => {
             border-left: 0px solid ${BRIGHT_PURPLE} !important;
             ${textShadow}
             font-weight: bold;
-            color: rgb(${TEXT_GREEN});
+            color: ${TEXT_GREEN};
           }
           .tab_active:before {
             border-bottom: none !important;
