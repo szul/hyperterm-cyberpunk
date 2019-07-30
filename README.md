@@ -8,4 +8,4 @@
 
 ![Hyper Cyberpunk Theme Visual Studio Code match](./assets/vscode-match.png)
 
-Adapter from the [hyperpunk](https://github.com/staltz/hyperpunk) theme.
+Adapted from the [hyperpunk](https://github.com/staltz/hyperpunk) theme.
