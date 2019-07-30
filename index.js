@@ -1,3 +1,5 @@
+//@ts-check
+
 const HUE_SHIFT_INTENSITY = 4;
 const BRIGHT_PURPLE = '#C592FF';
 const DARK_PURPLE = '#100D23';
@@ -5,41 +7,39 @@ const TEXT_GREEN = '#00FF9C';
 const PINKISH = '#FF4082';
 
 exports.decorateConfig = (config) => {
-  return Object.assign({}, config, {
-    foregroundColor: BRIGHT_PURPLE,
-    backgroundColor: DARK_PURPLE,
-    borderColor: PINKISH,
-    cursorColor: '#40FFFF',
-  });
+	return Object.assign({}, config, {
+		foregroundColor: BRIGHT_PURPLE,
+		backgroundColor: DARK_PURPLE,
+		borderColor: PINKISH,
+		cursorColor: '#40FFFF',
+	});
 }
 
 exports.decorateHyper = (HyperTerm, { React, notify }) => {
-  return class extends React.Component {
-    constructor(props, context) {
-      super(props, context);
-      this.state = { noise: 0 };
-      this._flip = this._flip.bind(this);
-      this._intervalID = null;
-    }
-
-    _flip () {
-      this.setState({ noise: (this.state.noise + 1) % 3 });
-    }
-
-    componentWillMount() {
-      this._intervalID = setInterval(this._flip, 120);
-    }
-
-    render() {
-      const noiseCss = `
+	return class extends React.Component {
+		constructor(props, context) {
+			super(props, context);
+			this.state = { noise: 0 };
+			this._flip = this._flip.bind(this);
+			this._intervalID = null;
+		}
+		_flip() {
+			this.setState({ noise: (this.state.noise + 1) % 3 });
+		}
+		componentWillMount() {
+			this._intervalID = setInterval(this._flip, 120);
+		}
+		render() {
+			const noiseCss = `
         background-color: #372963;
         background-size: 100px 100px;
       `;
-      const textShadow = generateTextShadow();
 
-      const overridenProps = {
-        backgroundColor: 'black',
-        customCSS: `
+			const textShadow = generateTextShadow();
+
+			const overridenProps = {
+				backgroundColor: 'black',
+				customCSS: `
           ${this.props.customCSS || ''}
           body {
             ${noiseCss}
@@ -77,75 +77,69 @@ exports.decorateHyper = (HyperTerm, { React, notify }) => {
             border-left: 1px solid transparent !important;
           }
         `,
-      };
-      return React.createElement(HyperTerm, Object.assign({}, this.props, overridenProps));
-    }
-
-    componentWillUnmount() {
-      clearInterval(this._intervalID);
-    }
-  }
+			};
+			return React.createElement(HyperTerm, Object.assign({}, this.props, overridenProps));
+		}
+		componentWillUnmount() {
+			clearInterval(this._intervalID);
+		}
+	}
 }
 
 exports.decorateTerm = (Term, { React, notify }) => {
-  return class extends React.Component {
-    constructor (props, context) {
-      super(props, context);
-      this._drawFrame = this._drawFrame.bind(this);
-      this._onTerminal = this._onTerminal.bind(this);
-      this._injectStyles = this._injectStyles.bind(this);
-      this._div = null;
-      this._body = null;
-      this._globalStyle = null;
-      this._term = null;
-      this._intervalID = null;
-    }
-
-    _onTerminal (term) {
-      if (this.props.onTerminal) this.props.onTerminal(term);
-      this._div = term.div_;
-      this._term = term;
-      this._body = term.cursorNode_.parentElement;
-      this._window = term.document_.defaultView;
-      this._injectStyles();
-      this._intervalID = setInterval(() => {
-        this._window.requestAnimationFrame(this._drawFrame);
-      }, 80);
-    }
-
-    _injectStyles() {
-      if (this._term) {
-        this._term.prefs_.set('background-color', 'transparent');
-        this._term.prefs_.set('background-image', 'none');
-      }
-      this._globalStyle = document.createElement('style');
-      this._globalStyle.setAttribute('type', 'text/css');
-      this._term.scrollPort_.document_.body.appendChild(this._globalStyle);
-    }
-
-    _drawFrame () {
-      this._globalStyle.innerHTML = `
+	return class extends React.Component {
+		constructor(props, context) {
+			super(props, context);
+			this._drawFrame = this._drawFrame.bind(this);
+			this._onTerminal = this._onTerminal.bind(this);
+			this._injectStyles = this._injectStyles.bind(this);
+			this._div = null;
+			this._body = null;
+			this._globalStyle = null;
+			this._term = null;
+			this._intervalID = null;
+		}
+		_onTerminal(term) {
+			if (this.props.onTerminal) this.props.onTerminal(term);
+			this._div = term.div_;
+			this._term = term;
+			this._body = term.cursorNode_.parentElement;
+			this._window = term.document_.defaultView;
+			this._injectStyles();
+			this._intervalID = setInterval(() => {
+				this._window.requestAnimationFrame(this._drawFrame);
+			}, 80);
+		}
+		_injectStyles() {
+			if (this._term) {
+				this._term.prefs_.set('background-color', 'transparent');
+				this._term.prefs_.set('background-image', 'none');
+			}
+			this._globalStyle = document.createElement('style');
+			this._globalStyle.setAttribute('type', 'text/css');
+			this._term.scrollPort_.document_.body.appendChild(this._globalStyle);
+		}
+		_drawFrame() {
+			this._globalStyle.innerHTML = `
         x-screen {
           ${generateTextShadow()}
         }
       `;
-    }
-
-    render () {
-      return React.createElement(Term, Object.assign({}, this.props, {
-        onTerminal: this._onTerminal
-      }));
-    }
-
-    componentWillUnmount () {
-      clearInterval(this._intervalID);
-    }
-  }
+		}
+		render() {
+			return React.createElement(Term, Object.assign({}, this.props, {
+				onTerminal: this._onTerminal
+			}));
+		}
+		componentWillUnmount() {
+			clearInterval(this._intervalID);
+		}
+	}
 };
 
 function generateTextShadow() {
-  let x = -1 + 2 * Math.random();
-  x = x * x;
-  const intensity = HUE_SHIFT_INTENSITY * x;
-  return `text-shadow: ${intensity}px 0 1px rgba(0,30,255,0.5), ${-intensity}px 0 1px rgba(255,0,80,0.3), 0 0 3px !important;`
+	let x = -1 + 2 * Math.random();
+	x = x * x;
+	const intensity = HUE_SHIFT_INTENSITY * x;
+	return `text-shadow: ${intensity}px 0 1px rgba(0,30,255,0.5), ${-intensity}px 0 1px rgba(255,0,80,0.3), 0 0 3px !important;`
 }
